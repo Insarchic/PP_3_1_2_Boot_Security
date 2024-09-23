@@ -59,7 +59,7 @@
                     <a href="/admin" class="nav-link active no-refresh">Admin</a>
                 </li>
                 <li class="nav-item">
-                    <a href="/user" class="nav-link no-refresh">User</a>
+                    <a href="/admin/user" class="nav-link no-refresh">User</a>
                 </li>
             </ul>
         </div>
@@ -227,6 +227,11 @@
                                    name="email" required/>
                         </div>
                         <div class="form-group">
+                            <label th:for="'password' + ${user.id}">Password</label>
+                            <input type="password" class="form-control" th:id="'password' + ${user.id}"
+                                   name="password" required placeholder="Password"/>
+                        </div>
+                        <div class="form-group">
                             <label>Roles</label>
                             <select class="form-control" multiple name="roles">
                                 <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"
@@ -300,7 +305,21 @@
         </div>
     </div>
 </div>
+<script>
+    // Пример получения роли пользователя (может быть на основе данных с сервера)
+    let role = 'USER'; // допустим, это значение может быть 'admin' или 'user'
 
+    // Отображение вкладок в зависимости от роли
+    if (role === 'ADMIN') {
+        // Если админ, показываем обе вкладки
+        document.querySelector('.admin-tab').style.display = 'block';
+        document.querySelector('.user-tab').style.display = 'block';
+    } else if (role === 'user') {
+        // Если только юзер, показываем только вкладку "User"
+        document.querySelector('.admin-tab').style.display = 'none';
+        document.querySelector('.user-tab').style.display = 'block';
+    }
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

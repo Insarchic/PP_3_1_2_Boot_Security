@@ -1,12 +1,14 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
-
 import java.security.Principal;
 
 @Controller
@@ -14,11 +16,12 @@ import java.security.Principal;
 public class AdminController {
     private final UserService userService;
     private final RoleService roleService;
+    private final UserRepository userRepository;
 
-    public AdminController(UserService userService, RoleService roleService) {
+    public AdminController(UserService userService, RoleService roleService, UserRepository userRepository) {
         this.userService = userService;
         this.roleService = roleService;
-
+        this.userRepository = userRepository;
     }
 
     @GetMapping
@@ -62,4 +65,15 @@ public class AdminController {
         userService.delete(id);
         return "redirect:/admin";
     }
+
+    @GetMapping("/user")
+    public String tableUser(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username).orElseThrow();
+        model.addAttribute("user", user);
+        return "user2";
+    }
+
+
 }
